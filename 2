@@ -1,0 +1,37 @@
+def min_orbs(potion, recipes, memo):
+    if potion in memo:
+        return memo[potion]
+    if potion not in recipes:
+        return 0
+
+    min_orbs_required = float('inf')
+    for recipe in recipes[potion]:
+        orbs = len(recipe) - 1 
+        for ingredient in recipe:
+            orbs += min_orbs(ingredient, recipes, memo)
+        min_orbs_required = min(min_orbs_required, orbs)
+    
+    memo[potion] = min_orbs_required
+    return min_orbs_required
+
+def main():
+    N = int(input().strip())
+    recipes = {}
+    
+    for _ in range(N):
+        recipe = input().strip()
+        potion, ingredients = recipe.split('=')
+        ingredients_list = ingredients.split('+')
+        
+        if potion not in recipes:
+            recipes[potion] = []
+        recipes[potion].append(ingredients_list)
+    
+    target_potion = input().strip()
+    memo = {}
+    
+    result = min_orbs(target_potion, recipes, memo)
+    print(result)
+
+
+main()
