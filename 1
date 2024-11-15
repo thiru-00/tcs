@@ -1,0 +1,52 @@
+def handle_operations():
+    initial_balance = int(input("Enter the initial balance: "))
+    N = int(input("Enter the number of operations: "))
+    
+    balance = initial_balance
+    transactions = []
+    commits = []
+    
+    for _ in range(N):
+        operation = input("Enter operation: ").strip()
+    
+        if operation.startswith("credit"):
+            try:
+                amount = int(operation.split()[1])
+                balance += amount
+                transactions.append(amount)
+            except IndexError:
+                print("Error: Credit operation must be followed by an amount.")
+        elif operation.startswith("debit"):
+            try:
+                amount = int(operation.split()[1])
+                balance -= amount
+                transactions.append(-amount)
+            except IndexError:
+                print("Error: Debit operation must be followed by an amount.")
+        elif operation.startswith("abort"):
+            try:
+                index = int(operation.split()[1]) - 1
+                if index < len(transactions):
+                    balance -= transactions[index]
+                    transactions[index] = 0
+            except IndexError:
+                print("Error: Abort operation must be followed by a transaction number.")
+        elif operation.startswith("rollback"):
+            try:
+                index = int(operation.split()[1]) - 1
+                if index < len(commits):
+                    balance = commits[index]
+            except IndexError:
+                print("Error: Rollback operation must be followed by a commit number.")
+        elif operation.startswith("commit"):
+            commits.append(balance)
+            transactions.clear()
+        elif operation.startswith("read"):
+            continue
+        else:
+            print("Error: Invalid operation")
+        print(f"initial_balance: {initial_balance}")
+    print(f"Final balance: {balance}")
+
+
+handle_operations()
